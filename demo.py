@@ -1,77 +1,48 @@
-# Pocketfulapi-Python Library
-
-Pocketfulapi-python is a Python library designed for traders and investors who want to streamline their workflow by automating or programmatically handling their trading activities on Pocketful. This library offers all the methods required for interacting with the trading APIs, and includes various features such as placing orders, fetching market data, and perform various other tasks crucial for managing a stock portfolio.
-
-
-## Features
-1. Place Orders: Easily place buy and sell orders for different instruments.
-2. Fetch Holdings: Retrieve current holdings in the portfolio.
-3. Fetch Positions: Get an overview of positions.
-4. Check Funds: Check the available balance in your trading account.
-5. Websockets: Fetch real-time data for different instruments
-
-
-## Installation
-You can clone the repository using the below commands, make sure you have python installed on your system to use this library.
-
-```bash
-git clone https://github.com/pocketful-tech/Pocketfulapi-python.git
-cd Pocketfulapi-python
-pip install -r requirements.txt
-```
-
-### Usage
-Here’s a basic example of how to use the library, we have added this file in the repository:
-
-```python
 from PocketfulAPI.pocketful import Pocketful
 
-clientId = "<clientId>"            # pocketful account Client Id
-accessToken = "<accessToken>"    # generate your access token from "https://api.pocketful.in/login"
+clientId = ""
+access_token = ""
 
 
-# Create an Instance of Pocketful class, with that instance you can call all the methods required for trading, see pocketful docs for detailed documentation
-obj=Pocketful(clientId, accessToken)
+pocket = Pocketful(clientId, access_token)
 
-data=obj.getProfile()
-print(data)
+response = pocket.getProfile()
+print(response)
 
-# Comment and uncomment the code accordingly to understand all the methods properly
-
-# data=obj.getPendingOrder()
+# data=pocket.getPendingOrder()
 # print(data)
 
-# data=obj.getCompletedOrder()
+# data = pocket.getCompletedOrder()
 # print(data)
 
-# data=obj.getTradeBook()
+# data = pocket.getTradeBook()
 # print(data)
 
-# data = obj.getOrderHistory("<oms_order_id>")
+# data = pocket.getOrderHistory("<oms_order_id>")
 # print(data)
 
 
-# getDematHoldings=obj.getDematHoldings()
+# getDematHoldings = pocket.getDematHoldings()
 # print(getDematHoldings)
 
-# getPositionsNetwise=obj.getPositionsNetwise()
+# getPositionsNetwise = pocket.getPositionsNetwise()
 # print(getPositionsNetwise)
 
 
-# getPositionsDaywise=obj.getPositionsDaywise()
+# getPositionsDaywise = pocket.getPositionsDaywise()
 # print(getPositionsDaywise)
 
 
 
 
-# createBasket=obj.createBasket({"login_id":clientId,"name":"pocketful001","type":"NORMAL","product_type":"ALL","order_type":"ALL"})
+# createBasket = pocket.createBasket({"login_id":clientId,"name":"pocketful002","type":"NORMAL","product_type":"ALL","order_type":"ALL"})
 # print(createBasket)
 
-# data = obj.addInstrumentToBasket({
+# response = pocket.addInstrumentToBasket({
 #         "basket_id": "eb3d2244-af73-4f05-a70b-a3518b4d321d",
 #         "name": "pocketful001",
 #         "order_info": {
-#             "client_id": "<client id>",
+#             "client_id": "client id",
 #             "disclosedQuantity": 0,
 #             "exchange": "NSE",
 #             "execution_type": "REGULAR",
@@ -90,6 +61,7 @@ print(data)
 #         }
 #      }
 # )
+# print(response)
 
 
 
@@ -220,9 +192,6 @@ print(data)
 # print(data)
 
 
-# ltp=obj.getLtp("BFO",845835)
-# print("ltp ",ltp)
-
 # ltp=obj.getLtp("NSE","45827")
 # print("ltp ",ltp)
 
@@ -233,7 +202,7 @@ print(data)
 # data=obj.getClosePrice("NSE","3045")
 # print(data)
 
-# data=obj.getOptionChain(3045,6,data["data"])
+# data=obj.getOptionChain("instrument-token","numnber of options", "ltp")
 # print(data)
 
 
@@ -243,17 +212,15 @@ print(data)
 # ## <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< WebSocket >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 
-# from PocketfulAPI.pacefinwebsocket import PocketfulSocket
+# from PocketfulAPI.pocketfulwebsocket import PocketfulSocket
 # import time
 
+# clientId = "clientId"
+# access_token = ""
 
-# client_id = "<client_id>"
-# access_token = "<access_Token>"
-
-# conn = PocketfulSocket(client_id,access_token)
+# conn = PocketfulSocket(clientId, access_token)
 
 # ws_status = conn.run_socket()
-
 
 # exchange_code = {
 #     "NSE" : 1,
@@ -265,52 +232,20 @@ print(data)
 # }
 
 
-# marketdata_payload= {'exchangeCode': 4, 'instrumentToken': 428177}
+# marketdata_payload= {'exchangeCode': 1, 'instrumentToken': 14366}
 # conn.subscribe_detailed_marketdata(marketdata_payload)
 
-# snapquotedata_payload = {'exchangeCode': 1, 'instrumentToken': 3045}
-# conn.subscribe_snapquote_data(snapquotedata_payload,)
-
-
-# # For subscribe Multiple token 
-# # For subscribe Multiple token 
-# conn.subscribe_multiple_detailed_marketdata(
-#         [
-
-#             {'exchangeCode': 2, 'instrumentToken': 35648},
-#             {'exchangeCode': 2, 'instrumentToken': 35649},
-#             {'exchangeCode': 2, 'instrumentToken': 35650},
-#             {'exchangeCode': 2, 'instrumentToken': 35651},
-
-
-#         ]
-#     )
-
-
-
 # i =0
-# while True:
-#     time.sleep(1)
+# flag = 1
+# while flag:
+#     time.sleep(0.5)
 #     detailed_market_data = conn.read_detailed_marketdata()
-#     print("detailed_market_data ", detailed_market_data)
+#     print("detailed_market_data -----", detailed_market_data)
 
-    
-
-#     # print("multiple channels subscribed ....")
-
-#     detailed_market_data = conn.read_multiple_detailed_marketdata()
-#     print( detailed_market_data )
-
-
-#     # snapquote_data = conn.read_snapquote_data()
-#     # print(detailed_market_data)
 #     i = i + 1
 #     print("==================================")
 #     if i > 5:
-#         print("unsubscribe marketdata")
+#         print("unsubscribed marketdata")
 #         conn.unsubscribe_detailed_marketdata(marketdata_payload)
-#         print("unsubscribe snapquote")
-#         conn.unsubscribe_detailed_marketdata(snapquotedata_payload)
-
-```
-
+#         flag = 0
+        
