@@ -31,43 +31,43 @@ accessToken = "<accessToken>"    # generate your access token from "https://api.
 
 
 # Create an Instance of Pocketful class, with that instance you can call all the methods required for trading, see pocketful docs for detailed documentation
-obj=Pocketful(clientId, accessToken)
+pocket=Pocketful(clientId, accessToken)
 
-data=obj.getProfile()
+data=pocket.getProfile()
 print(data)
 
 # Comment and uncomment the code accordingly to understand all the methods properly
 
-# data=obj.getPendingOrder()
+# data=pocket.getPendingOrder()
 # print(data)
 
-# data=obj.getCompletedOrder()
+# data=pocket.getCompletedOrder()
 # print(data)
 
-# data=obj.getTradeBook()
+# data=pocket.getTradeBook()
 # print(data)
 
-# data = obj.getOrderHistory("<oms_order_id>")
+# data = pocket.getOrderHistory("<oms_order_id>")
 # print(data)
 
 
-# getDematHoldings=obj.getDematHoldings()
+# getDematHoldings=pocket.getDematHoldings()
 # print(getDematHoldings)
 
-# getPositionsNetwise=obj.getPositionsNetwise()
+# getPositionsNetwise=pocket.getPositionsNetwise()
 # print(getPositionsNetwise)
 
 
-# getPositionsDaywise=obj.getPositionsDaywise()
+# getPositionsDaywise=pocket.getPositionsDaywise()
 # print(getPositionsDaywise)
 
 
 
 
-# createBasket=obj.createBasket({"login_id":clientId,"name":"pocketful001","type":"NORMAL","product_type":"ALL","order_type":"ALL"})
+# createBasket=pocket.createBasket({"login_id":clientId,"name":"pocketful001","type":"NORMAL","product_type":"ALL","order_type":"ALL"})
 # print(createBasket)
 
-# data = obj.addInstrumentToBasket({
+# data = pocket.addInstrumentToBasket({
 #         "basket_id": "eb3d2244-af73-4f05-a70b-a3518b4d321d",
 #         "name": "pocketful001",
 #         "order_info": {
@@ -93,17 +93,17 @@ print(data)
 
 
 
-# fetchBasket=obj.fetchBasket()
+# fetchBasket=pocket.fetchBasket()
 # print(fetchBasket)
 
-# renameBasket=obj.renameBasket({"basket_id":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","name":"yash"})
+# renameBasket=pocket.renameBasket({"basket_id":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","name":"yash"})
 # print(renameBasket)
 
-# deleteBasket=obj.deleteBasket({"BasketId":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","BasketName":"yash"})
+# deleteBasket=pocket.deleteBasket({"BasketId":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","BasketName":"yash"})
 # print(deleteBasket)
 
 ## !! Place Buy order
-# placeOrder=obj.placeOrder({
+# placeOrder=pocket.placeOrder({
 #     "exchange": "NSE",
 #     "instrument_token": "14366",
 #     "client_id": clientId,
@@ -124,7 +124,7 @@ print(data)
 
 
 # !! SELL order
-# placeOrder=obj.placeOrder({
+# placeOrder=pocket.placeOrder({
 
 #     "exchange": "NSE",
 #     "instrument_token": "10666",
@@ -152,7 +152,7 @@ print(data)
 
 # # !! Condition BO  ordering
 
-# conditional_order=obj.placeConditionalOrder( {
+# conditional_order=pocket.placeConditionalOrder( {
 #     "client_id": "clintId",
 #     "device": "WEB",
 #     "disclosed_quantity": 0,
@@ -175,7 +175,7 @@ print(data)
 
 # print(conditional_order)
 
-# sellconditional_order=obj.placeConditionalOrder( {
+# sellconditional_order=pocket.placeConditionalOrder( {
 #     "client_id": "clintId",
 #     "device": "WEB",
 #     "disclosed_quantity": 0,
@@ -199,41 +199,41 @@ print(data)
 # print(sellconditional_order)
 
 
-# modifyConditionalOrder=obj.modifyConditionalOrder( {"exchange":"NSE","instrument_token":10666,"client_id":"","order_type":"LIMIT","price":80.9,"quantity":1,"disclosed_quantity":0,"validity":"DAY","product":"MIS","oms_order_id":"20231211-1762","exchange_order_id":"1200000019706097","filled_quantity":0,"remaining_quantity":1,"last_activity_reference":1386762580344098300,"trigger_price":0,"stop_loss_value":1,"square_off_value":"2","trailing_stop_loss":0,"is_trailing":False,"execution_type":"BO"})
+# modifyConditionalOrder=pocket.modifyConditionalOrder( {"exchange":"NSE","instrument_token":10666,"client_id":"","order_type":"LIMIT","price":80.9,"quantity":1,"disclosed_quantity":0,"validity":"DAY","product":"MIS","oms_order_id":"20231211-1762","exchange_order_id":"1200000019706097","filled_quantity":0,"remaining_quantity":1,"last_activity_reference":1386762580344098300,"trigger_price":0,"stop_loss_value":1,"square_off_value":"2","trailing_stop_loss":0,"is_trailing":False,"execution_type":"BO"})
 
 # print(modifyConditionalOrder)
 
 
-# cancelConditionalOrder=obj.cancelConditionalOrder({"oms_order_id":"20231211-1897","execution_type":"BO","exchange_order_id":"1200000022379287","leg_order_indicator":"ENTRY","status":"MODIFY_CONFIRMED","client_id":clientId})
+# cancelConditionalOrder=pocket.cancelConditionalOrder({"oms_order_id":"20231211-1897","execution_type":"BO","exchange_order_id":"1200000022379287","leg_order_indicator":"ENTRY","status":"MODIFY_CONFIRMED","client_id":clientId})
 # print(cancelConditionalOrder)
 
 
 
-# data=obj.getFunds()
+# data=pocket.getFunds()
 # print(data)
 
 
-# data=obj.getMarketdata("NFO","45835")   
+# data=pocket.getMarketdata("NFO","45835")   
 # print(data)
 
-# data=obj.getFNOdata("NFO","45835")   
+# data=pocket.getFNOdata("NFO","45835")   
 # print(data)
 
 
-# ltp=obj.getLtp("BFO",845835)
+# ltp=pocket.getLtp("BFO",845835)
 # print("ltp ",ltp)
 
-# ltp=obj.getLtp("NSE","45827")
+# ltp=pocket.getLtp("NSE","45827")
 # print("ltp ",ltp)
 
 
-# data=obj.getMarketdata("NSE","3045") 
+# data=pocket.getMarketdata("NSE","3045") 
 # print(data)
 
-# data=obj.getClosePrice("NSE","3045")
+# data=pocket.getClosePrice("NSE","3045")
 # print(data)
 
-# data=obj.getOptionChain(3045,6,data["data"])
+# data=pocket.getOptionChain(3045,6,data["data"])
 # print(data)
 
 
