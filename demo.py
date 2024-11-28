@@ -1,13 +1,16 @@
-from PocketfulAPI.pocketful import Pocketful
+# from PocketfulAPI.pocketful import Pocketful
+# import json
 
 clientId = ""
 access_token = ""
 
 
-pocket = Pocketful(clientId, access_token)
+# pocket = Pocketful(clientId, access_token)
 
-response = pocket.getProfile()
-print(response)
+# response = pocket.getProfile()
+# print(response)
+# with open("demoresponse.json", "w") as f:
+#     json.dump(response, f, indent=4) 
 
 # data=pocket.getPendingOrder()
 # print(data)
@@ -65,23 +68,26 @@ print(response)
 
 
 
-# fetchBasket=obj.fetchBasket()
+# fetchBasket=pocket.fetchBasket()
 # print(fetchBasket)
+# with open("demoresponse.json", "w") as f:
+#     json.dump(fetchBasket, f, indent=4) 
 
-# renameBasket=obj.renameBasket({"basket_id":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","name":"yash"})
+
+# renameBasket=pocket.renameBasket({"basket_id":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","name":"yash"})
 # print(renameBasket)
 
-# deleteBasket=obj.deleteBasket({"BasketId":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","BasketName":"yash"})
+# deleteBasket=pocket.deleteBasket({"BasketId":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","BasketName":"yash"})
 # print(deleteBasket)
 
 ## !! Place Buy order
-# placeOrder=obj.placeOrder({
+# placeOrder=pocket.placeOrder({
 #     "exchange": "NSE",
-#     "instrument_token": "14366",
+#     "instrument_token": "13342",
 #     "client_id": clientId,
 #     "order_type": "MARKET",
 #     "amo": True,
-#     "price": 13,"quantity": 1,
+#     "price": 0,"quantity": 1,
 #     "disclosed_quantity": 0,
 #     "validity": "DAY",
 #     "product": "CNC",
@@ -89,14 +95,16 @@ print(response)
 #     "device": "WEB",
 #     "user_order_id": 10002,
 #     "trigger_price": 0,
-#     "execution_type": "AMO"
+#     "execution_type": "REGULAR"
 #     })
 # print(placeOrder)
+# with open("demoresponse.json", "w") as f:
+#     json.dump(placeOrder, f, indent=4)
 
 
 
 # !! SELL order
-# placeOrder=obj.placeOrder({
+# placeOrder=pocket.placeOrder({
 
 #     "exchange": "NSE",
 #     "instrument_token": "10666",
@@ -124,7 +132,7 @@ print(response)
 
 # # !! Condition BO  ordering
 
-# conditional_order=obj.placeConditionalOrder( {
+# conditional_order=pocket.placeConditionalOrder( {
 #     "client_id": "clintId",
 #     "device": "WEB",
 #     "disclosed_quantity": 0,
@@ -147,7 +155,7 @@ print(response)
 
 # print(conditional_order)
 
-# sellconditional_order=obj.placeConditionalOrder( {
+# sellconditional_order=pocket.placeConditionalOrder( {
 #     "client_id": "clintId",
 #     "device": "WEB",
 #     "disclosed_quantity": 0,
@@ -171,38 +179,38 @@ print(response)
 # print(sellconditional_order)
 
 
-# modifyConditionalOrder=obj.modifyConditionalOrder( {"exchange":"NSE","instrument_token":10666,"client_id":"","order_type":"LIMIT","price":80.9,"quantity":1,"disclosed_quantity":0,"validity":"DAY","product":"MIS","oms_order_id":"20231211-1762","exchange_order_id":"1200000019706097","filled_quantity":0,"remaining_quantity":1,"last_activity_reference":1386762580344098300,"trigger_price":0,"stop_loss_value":1,"square_off_value":"2","trailing_stop_loss":0,"is_trailing":False,"execution_type":"BO"})
+# modifyConditionalOrder=pocket.modifyConditionalOrder( {"exchange":"NSE","instrument_token":10666,"client_id":"","order_type":"LIMIT","price":80.9,"quantity":1,"disclosed_quantity":0,"validity":"DAY","product":"MIS","oms_order_id":"20231211-1762","exchange_order_id":"1200000019706097","filled_quantity":0,"remaining_quantity":1,"last_activity_reference":1386762580344098300,"trigger_price":0,"stop_loss_value":1,"square_off_value":"2","trailing_stop_loss":0,"is_trailing":False,"execution_type":"BO"})
 
 # print(modifyConditionalOrder)
 
 
-# cancelConditionalOrder=obj.cancelConditionalOrder({"oms_order_id":"20231211-1897","execution_type":"BO","exchange_order_id":"1200000022379287","leg_order_indicator":"ENTRY","status":"MODIFY_CONFIRMED","client_id":clientId})
+# cancelConditionalOrder=pocket.cancelConditionalOrder({"oms_order_id":"20231211-1897","execution_type":"BO","exchange_order_id":"1200000022379287","leg_order_indicator":"ENTRY","status":"MODIFY_CONFIRMED","client_id":clientId})
 # print(cancelConditionalOrder)
 
 
 
-# data=obj.getFunds()
+# data=pocket.getFunds()
 # print(data)
 
 
-# data=obj.getMarketdata("NFO","45835")   
+# data=pocket.getMarketdata("NFO","45835")   
 # print(data)
 
-# data=obj.getFNOdata("NFO","45835")   
+# data=pocket.getFNOdata("NFO","45835")   
 # print(data)
 
 
-# ltp=obj.getLtp("NSE","45827")
+# ltp=pocket.getLtp("NSE","45827")
 # print("ltp ",ltp)
 
 
-# data=obj.getMarketdata("NSE","3045") 
+# data=pocket.getMarketdata("NSE","3045") 
 # print(data)
 
-# data=obj.getClosePrice("NSE","3045")
+# data=pocket.getClosePrice("NSE","3045")
 # print(data)
 
-# data=obj.getOptionChain("instrument-token","numnber of options", "ltp")
+# data=pocket.getOptionChain("instrument-token","numnber of options", "ltp")
 # print(data)
 
 
@@ -211,11 +219,14 @@ print(response)
 
 # ## <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< WebSocket >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+"""
+In the below example we have shown how a client can access live market feeds, you can use this live market feed for your strategies.
+"""
 
 # from PocketfulAPI.pocketfulwebsocket import PocketfulSocket
 # import time
 
-# clientId = "clientId"
+# clientId = ""
 # access_token = ""
 
 # conn = PocketfulSocket(clientId, access_token)
@@ -248,4 +259,3 @@ print(response)
 #         print("unsubscribed marketdata")
 #         conn.unsubscribe_detailed_marketdata(marketdata_payload)
 #         flag = 0
-        
