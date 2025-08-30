@@ -1,9 +1,25 @@
-# from PocketfulAPI.pocketful import Pocketful
-# import json
+from PocketfulAPI.pocketful import Pocketful
+import json
 
-clientId = ""
-access_token = ""
+clientId = "9CD12"            # pocketful account Client Id
+accessToken = "DfjLZwHdzNoazGtDf9hT4w5ry2bCso6c4l-lTjTfICg.KyonoGpQgsytSmlpvBICDxfdN865m1iMgvnWrmlCqEE"    # generate your access token from "https://api.pocketful.in/login"
 
+print("Initializing Pocketful client...")
+try:
+    pocket=Pocketful(clientId, accessToken)
+    print("Client initialized successfully")
+    
+    print("Making API call to get F&O LTP data...")
+    data= pocket.getFNOdata("BSE","845835")
+    print("API call completed")
+    print("Response data:")
+    print(data)
+    
+except Exception as e:
+    print(f"Error occurred: {e}")
+    print(f"Error type: {type(e)}")
+    import traceback
+    traceback.print_exc()
 
 # pocket = Pocketful(clientId, access_token)
 

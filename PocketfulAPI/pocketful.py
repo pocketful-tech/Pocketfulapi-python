@@ -77,8 +77,7 @@ class Pocketful(object):
 
 
         # funds
-        "api.funds1": "/api/v1/funds/view?client_id={ClientId}&type=all",
-        "api.funds2": "/api/v2/funds/view?client_id={ClientId}&type=all",
+        "api.funds": "/api/v2/funds/view?client_id={ClientId}&type=all",
         
         # market data
         "api.marketdata": "/api/v1/marketdata/{exchange}/Capital?token={token}",
@@ -86,8 +85,8 @@ class Pocketful(object):
         "api.close_price": "/api/v1/marketdata/{exchange}/Capital?token={token}&key=close_price",
 
         # fno data
-        "api.nfodata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}",
-        "api.nfoLtpdata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}&key=last_trade_price",
+        "api.fnodata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}",
+        "api.fnoLtpdata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}&key=last_trade_price",
     }
 
 
@@ -474,7 +473,7 @@ class Pocketful(object):
  
     def getFunds(self):
         """Get Funds."""
-        data = self._getRequest("api.funds1",{"ClientId":self.clientId})
+        data = self._getRequest("api.funds",{"ClientId":self.clientId})
         return data
 
 
@@ -496,12 +495,12 @@ class Pocketful(object):
 
     def getFNOdata(self,exchange,token):
         """Get market data."""
-        data = self._getRequest("api.nfodata",{"exchange":exchange,"token":token})
+        data = self._getRequest("api.fnodata",{"exchange":exchange,"token":token})
         return data
 
-    def getNFOltp(self,exchange,token):
+    def getFNOltp(self,exchange,token):
         """Get LTP data."""
-        data = self._getRequest("api.nfoLtpdata",{"exchange":exchange,"token":token})
+        data = self._getRequest("api.fnoLtpdata",{"exchange":exchange,"token":token})
         return data
 
     def getDPRdata(self,exchange,token):
