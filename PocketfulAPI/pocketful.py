@@ -40,7 +40,7 @@ class Pocketful(object):
         "api.conditional.order.cancel": "/api/v1/orders/kart/{oms_order_id}",
 
         # order book
-        "api.pending.order": "/api/v1/orders?type=pending&client_id={ClientId}",
+        "api.pending.order": "/api/v1/orders?type=pending&client_id={client_id}",
         "api.completed.order": "/api/v1/orders?type=completed&client_id={ClientId}",
         "api.traded.order": "/api/v1/trades?client_id={ClientId}",
         "api.historical.order": "/api/v1/order/{oms_order_id}/history?client_id={ClientId}",
@@ -163,7 +163,7 @@ class Pocketful(object):
             'P-DeviceType': 'WEB',
             'Content-type': 'application/json',
             'accept': 'application/json',
-            'Authorization': f"Bearer {self.access_token}"
+            'Authorization': "Bearer "+self.access_token
             # 'x-authorization-token': self.access_token,
 
         }
@@ -174,16 +174,38 @@ class Pocketful(object):
         """Make an HTTP request."""
         params = parameters.copy() if parameters else {}
        
-        uri =self._routes[route].format(**params)
+        # Extract path parameters (those used in URL formatting)
+        path_params = {}
+        query_params = {}
+        
+        # For routes that use path parameters, extract them
+        if route in ["api.regular.order.cancel", "api.conditional.order.cancel", "api.gtt.order.cancel"]:
+            if "oms_order_id" in params:
+                path_params["oms_order_id"] = params["oms_order_id"]
+                # Remove from query params to avoid duplication
+                query_params = {k: v for k, v in params.items() if k != "oms_order_id"}
+            else:
+                path_params = {}
+                query_params = params
+        else:
+            # For other routes, all params are query params
+            query_params = params
+        
+        uri = self._routes[route].format(**path_params)
         url = urljoin(self.root, uri)
         # Custom headers
         headers = self.requestHeaders()
 
-        if self.access_token:
-            # set authorization header
-        
-            auth_header = self.access_token
-            headers["Authorization"] = "Bearer {}".format(auth_header)
+        # Print API call details
+        print(f"\n=== API CALL TO trade.pocketful.in ===")
+        print(f"Method: {method}")
+        print(f"URL: {url}")
+        print(f"Path Parameters: {path_params}")
+        print(f"Query Parameters: {query_params}")
+        print(f"Headers: {headers}")
+        print(f"=====================================\n")
+
+
 
         if self.debug:
             log.debug("Request: {method} {url} {params} {headers}".format(method=method, url=url, params=params, headers=headers))
@@ -192,12 +214,15 @@ class Pocketful(object):
             r = requests.request(method,
                                         url,
                                         data=json.dumps(params) if method in ["POST", "PUT"] else None,
-                                        params=json.dumps(params) if method in ["GET", "DELETE"] else None,
+                                        params=query_params if method in ["GET", "DELETE"] else None,
                                         headers=headers,
                                         verify=not self.disable_ssl,
                                         allow_redirects=True,
                                         timeout=self.timeout,
                                         proxies=self.proxies)
+            
+            # Print the final URL that was actually requested
+            print(f"Final URL requested: {r.url}")
            
         except Exception as e:
             raise e
@@ -278,6 +303,10 @@ class Pocketful(object):
         for k in list(params.keys()):
             if params[k] is None :
                 del(params[k])
+        
+        print("------")
+        
+        print(params)
         orderResponse= self._deleteRequest("api.regular.order.cancel", params)
         return orderResponse
     
@@ -409,7 +438,7 @@ class Pocketful(object):
     # order book
     def getPendingOrder(self):
         """Get Pending Order."""
-        data = self._getRequest("api.pending.order",{"ClientId":self.clientId})
+        data = self._getRequest("api.pending.order",{"client_id":self.clientId})
         return data
     
     def getCompletedOrder(self):
