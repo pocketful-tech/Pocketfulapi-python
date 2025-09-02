@@ -40,7 +40,7 @@ class Pocketful(object):
         "api.conditional.order.cancel": "/api/v1/orders/kart/{oms_order_id}",
 
         # order book
-        "api.pending.order": "/api/v1/orders?type=pending&client_id={client_id}",
+        "api.pending.order": "/api/v1/orders?type=pending&client_id={ClientId}",
         "api.completed.order": "/api/v1/orders?type=completed&client_id={ClientId}",
         "api.traded.order": "/api/v1/trades?client_id={ClientId}",
         "api.historical.order": "/api/v1/order/{oms_order_id}/history?client_id={ClientId}",
@@ -438,7 +438,7 @@ class Pocketful(object):
     # order book
     def getPendingOrder(self):
         """Get Pending Order."""
-        data = self._getRequest("api.pending.order",{"client_id":self.clientId})
+        data = self._getRequest("api.pending.order",{"ClientId":self.clientId})
         return data
     
     def getCompletedOrder(self):
