@@ -207,12 +207,12 @@ class Pocketful(object):
         headers = self.requestHeaders()
 
         # Print API call details
-        print(f"\n=== API CALL TO trade.pocketful.in ===")
-        print(f"Method: {method}")
+        #print(f"\n=== API CALL TO trade.pocketful.in ===")
+        #print(f"Method: {method}")
         print(f"URL: {url}")
-        print(f"Path Parameters: {path_params}")
-        print(f"Query Parameters: {query_params}")
-        print(f"Headers: {headers}")
+        #print(f"Path Parameters: {path_params}")
+        #print(f"Query Parameters: {query_params}")
+        #print(f"Headers: {headers}")
         print(f"=====================================\n")
 
 
