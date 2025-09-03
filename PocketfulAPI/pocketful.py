@@ -26,7 +26,7 @@ class Pocketful(object):
 
     _routes = {
         # profile
-        "api.profile": "/api/v1/user/profile?client_id={ClientId}",
+        "api.profile": "/api/v1/user/profile?client_id={client_id}",
     
         # regular order
         "api.regular.order.place": "/api/v1/orders",
@@ -40,15 +40,15 @@ class Pocketful(object):
         "api.conditional.order.cancel": "/api/v1/orders/kart/{oms_order_id}",
 
         # order book
-        "api.pending.order": "/api/v1/orders?type=pending&client_id={ClientId}",
-        "api.completed.order": "/api/v1/orders?type=completed&client_id={ClientId}",
-        "api.traded.order": "/api/v1/trades?client_id={ClientId}",
-        "api.historical.order": "/api/v1/order/{oms_order_id}/history?client_id={ClientId}",
+        "api.pending.order": "/api/v1/orders?type=pending&client_id={client_id}",
+        "api.completed.order": "/api/v1/orders?type=completed&client_id={client_id}",
+        "api.traded.order": "/api/v1/trades?client_id={client_id}",
+        "api.historical.order": "/api/v1/order/{oms_order_id}/history?client_id={client_id}",
 
         # basket order
         "api.basket.create": "/api/v1/basket",
-        "api.basket.fetch": "api/v1/basket?login_id={ClientId}",
-        "api.basket.delete": "/api/v1/basket?basket_id={BasketId}&name={BasketName}",
+        "api.basket.fetch": "api/v1/basket?login_id={client_id}",
+        "api.basket.delete": "/api/v1/basket?basket_id={basket_id}&name={basket_name}",
         "api.execute.basket": "/api/v1/orders/kart",
         "api.basket.rename": "/api/v1/basket",
 
@@ -58,26 +58,26 @@ class Pocketful(object):
 
         # gtt
         "api.gtt.create": "/api/v1/event/gtt",
-        "api.gtt.order.fetch": "/api/v1/event/gtt?client_id={ClientId}",
-        "api.gtt.order.cancel": "/api/v1/event/gtt/{ClientId}/{Id}",
+        "api.gtt.order.fetch": "/api/v1/event/gtt?client_id={client_id}",
+        "api.gtt.order.cancel": "/api/v1/event/gtt/{client_id}/{id}",
         "api.gtt.order.modify": "/api/v1/event/gtt",
 
         # portfolio
-        "api.portfolio.positions.daywise": "/api/v1/positions?client_id={ClientId}&type=live",
-        "api.portfolio.positions.netwise": "/api/v1/positions?client_id={ClientId}&type=historical",
-        "api.portfolio.demate.holdings": "/api/v1/holdings?client_id={ClientId}",
+        "api.portfolio.positions.daywise": "/api/v1/positions?client_id={client_id}&type=live",
+        "api.portfolio.positions.netwise": "/api/v1/positions?client_id={client_id}&type=historical",
+        "api.portfolio.demate.holdings": "/api/v1/holdings?client_id={client_id}",
         "api.portfolio.convert.position": "/api/v1/position/convert",
 
         # contract details
-        "api.search.scrip": "/api/v1/search?key={KeyOfInstrument}",
-        "api.scrip.info": "/api/v1/contract/{Exchange}?info=scrip&token={InstrumentTokenOfEquity}",
+        "api.search.scrip": "/api/v1/search?key={key}",
+        "api.scrip.info": "/api/v1/contract/{exchange}?info=scrip&token={token}",
 
         # option chain
-        "api.fetch.option.chain":"/api/v1/optionchain/NFO?token={EquityToken}&num={NumberOfEntries}&price={PriceOfOptions}",
+        "api.fetch.option.chain":"/api/v1/optionchain/NFO?token={equity_token}&num={num}&price={price}",
 
 
         # funds
-        "api.funds": "/api/v2/funds/view?client_id={ClientId}&type=all",
+        "api.funds": "/api/v2/funds/view?client_id={client_id}&type=all",
         
         # market data
         "api.marketdata": "/api/v1/marketdata/{exchange}/Capital?token={token}",
@@ -178,7 +178,7 @@ class Pocketful(object):
         path_params = {}
         query_params = {}
         
-        # For routes that use path parameters, extract them
+        # For routes that use path parameters in the URL path, extract them
         if route in ["api.regular.order.cancel", "api.conditional.order.cancel", "api.gtt.order.cancel"]:
             if "oms_order_id" in params:
                 path_params["oms_order_id"] = params["oms_order_id"]
@@ -188,10 +188,20 @@ class Pocketful(object):
                 path_params = {}
                 query_params = params
         else:
-            # For other routes, all params are query params
-            query_params = params
+            # For other routes, check if they have placeholders that need formatting
+            route_template = self._routes[route]
+            if "{" in route_template and "}" in route_template:
+                # Route has placeholders, format it with all params
+                uri = route_template.format(**params)
+                query_params = {}  # All params used in formatting
+            else:
+                # Route has no placeholders, use as-is
+                uri = route_template
+                query_params = params
         
-        uri = self._routes[route].format(**path_params)
+        # Format the route if there are path parameters
+        if path_params:
+            uri = self._routes[route].format(**path_params)
         url = urljoin(self.root, uri)
         # Custom headers
         headers = self.requestHeaders()
@@ -277,7 +287,7 @@ class Pocketful(object):
     
     def getProfile(self):
         """Get Profile details."""
-        data = self._getRequest("api.profile",{"ClientId":self.clientId})
+        data = self._getRequest("api.profile",{"client_id":self.clientId})
         return data
 
 
@@ -359,6 +369,11 @@ class Pocketful(object):
         for k in list(params.keys()):
             if params[k] is None :
                 del(params[k])
+        # Update parameter names to match route
+        if "ClientId" in params:
+            params["client_id"] = params.pop("ClientId")
+        if "Id" in params:
+            params["id"] = params.pop("Id")
         orderResponse= self._deleteRequest("api.gtt.order.cancel", params)
         return orderResponse['data']['id']
     
@@ -367,6 +382,9 @@ class Pocketful(object):
         for k in list(params.keys()):
             if params[k] is None :
                 del(params[k])
+        # Update parameter names to match route
+        if "ClientId" in params:
+            params["client_id"] = params.pop("ClientId")
         orderResponse= self._getRequest("api.gtt.order.fetch", params)
         return orderResponse['data']['id']
 
@@ -382,7 +400,7 @@ class Pocketful(object):
         return orderResponse
 
     def fetchBasket(self):
-        orderResponse= self._getRequest("api.basket.fetch", {"ClientId":self.clientId})
+        orderResponse= self._getRequest("api.basket.fetch", {"client_id":self.clientId})
         return orderResponse
     
 
@@ -391,6 +409,11 @@ class Pocketful(object):
         for k in list(params.keys()):
             if params[k] is None :
                 del(params[k])
+        # Update parameter names to match route
+        if "BasketId" in params:
+            params["basket_id"] = params.pop("BasketId")
+        if "BasketName" in params:
+            params["basket_name"] = params.pop("BasketName")
         orderResponse= self._deleteRequest("api.basket.delete", params)
         return orderResponse
     
@@ -443,17 +466,17 @@ class Pocketful(object):
     
     def getCompletedOrder(self):
         """Get Completed Order."""
-        data = self._getRequest("api.completed.order",{"ClientId":self.clientId})
+        data = self._getRequest("api.completed.order",{"client_id":self.clientId})
         return data
-
+    
     def getTradeBook(self):
         """Get Trade Book."""
-        data = self._getRequest("api.traded.order",{"ClientId":self.clientId})
+        data = self._getRequest("api.traded.order",{"client_id":self.clientId})
         return data
     
     def getOrderHistory(self,oms_order_id):
         """Get Order History."""
-        data = self._getRequest("api.historical.order",{"ClientId":self.clientId,"oms_order_id":oms_order_id})
+        data = self._getRequest("api.historical.order",{"client_id":self.clientId,"oms_order_id":oms_order_id})
         return data
     
     
@@ -461,17 +484,17 @@ class Pocketful(object):
     # portfolio
     def getPositionsDaywise(self):
         """Get Positions Daywise."""
-        data = self._getRequest("api.portfolio.positions.daywise",{"ClientId":self.clientId})
+        data = self._getRequest("api.portfolio.positions.daywise",{"client_id":self.clientId})
         return data
 
     def getPositionsNetwise(self):
         """Get Positions Netwise."""
-        data = self._getRequest("api.portfolio.positions.netwise",{"ClientId":self.clientId})
+        data = self._getRequest("api.portfolio.positions.netwise",{"client_id":self.clientId})
         return data
     
     def getDematHoldings(self):
         """Get Demate Holdings."""
-        data = self._getRequest("api.portfolio.demate.holdings",{"ClientId":self.clientId})
+        data = self._getRequest("api.portfolio.demate.holdings",{"client_id":self.clientId})
         return data
     
     def convertPosition(self,convertPositionParams):
@@ -485,24 +508,24 @@ class Pocketful(object):
     # contract details
     def searchScrip(self,key):
         """Search Scrip."""
-        data = self._getRequest("api.search.scrip",{"KeyOfInstrument":key})
+        data = self._getRequest("api.search.scrip",{"key":key})
         return data
 
     def getScripInfo(self,exchange,token):
         """Get Scrip Info."""
-        data = self._getRequest("api.scrip.info",{"Exchange":exchange,"InstrumentTokenOfEquity":token})
+        data = self._getRequest("api.scrip.info",{"exchange":exchange,"token":token})
         return data
     
     # option chain
     def getOptionChain(self,equityToken,numberOfEntries,price):
         """Get Option Chain."""
-        data = self._getRequest("api.fetch.option.chain",{"EquityToken":equityToken,"NumberOfEntries":numberOfEntries,"PriceOfOptions":price})
+        data = self._getRequest("api.fetch.option.chain",{"equity_token":equityToken,"num":numberOfEntries,"price":price})
         return data
     
  
     def getFunds(self):
         """Get Funds."""
-        data = self._getRequest("api.funds",{"ClientId":self.clientId})
+        data = self._getRequest("api.funds",{"client_id":self.clientId})
         return data
 
 
