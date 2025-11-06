@@ -83,6 +83,7 @@ class Pocketful(object):
         "api.marketdata": "/api/v1/marketdata/{exchange}/Capital?token={token}",
         "api.ltpdata": "/api/v1/marketdata/{exchange}/Capital?token={token}&key=last_trade_price",
         "api.close_price": "/api/v1/marketdata/{exchange}/Capital?token={token}&key=close_price",
+        "api.dprdata": "/api/v1/dprdata/{exchange}/{token}",
 
         # fno data
         "api.fnodata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}",
@@ -557,7 +558,7 @@ class Pocketful(object):
 
     def getDPRdata(self,exchange,token):
         """Get DPR data."""
-        data = self._getRequest("api.DPRdata",{"exchange":exchange,"token":token})
+        data = self._getRequest("api.dprdata",{"exchange":exchange,"token":token})
         return data
     
 

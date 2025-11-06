@@ -1,9 +1,8 @@
 from PocketfulAPI.pocketful import Pocketful
 import json
 
-clientId = "9CD12"            # pocketful account Client Id
-accessToken = "DfjLZwHdzNoazGtDf9hT4w5ry2bCso6c4l-lTjTfICg.KyonoGpQgsytSmlpvBICDxfdN865m1iMgvnWrmlCqEE"    # generate your access token from "https://api.pocketful.in/login"
-
+clientId = "YOUR_CLIENT_ID_HERE"            # pocketful account Client Id
+accessToken = "YOUR_ACCESS_TOKEN_HERE"
 print("Initializing Pocketful client...")
 try:
     pocket=Pocketful(clientId, accessToken)
@@ -221,6 +220,9 @@ except Exception as e:
 
 
 # data=pocket.getMarketdata("NSE","3045") 
+# print(data)
+
+# data=pocket.getDPRdata("NSE","3045")
 # print(data)
 
 # data=pocket.getClosePrice("NSE","3045")
