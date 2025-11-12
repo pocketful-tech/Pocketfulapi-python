@@ -210,11 +210,11 @@ class Pocketful(object):
         # Print API call details
         #print(f"\n=== API CALL TO trade.pocketful.in ===")
         #print(f"Method: {method}")
-        print(f"URL: {url}")
+        # print(f"URL: {url}")
         #print(f"Path Parameters: {path_params}")
         #print(f"Query Parameters: {query_params}")
         #print(f"Headers: {headers}")
-        print(f"=====================================\n")
+        # print(f"=====================================\n")
 
 
 
@@ -233,7 +233,7 @@ class Pocketful(object):
                                         proxies=self.proxies)
             
             # Print the final URL that was actually requested
-            print(f"Final URL requested: {r.url}")
+            # print(f"Final URL requested: {r.url}")
            
         except Exception as e:
             raise e
@@ -315,9 +315,9 @@ class Pocketful(object):
             if params[k] is None :
                 del(params[k])
         
-        print("------")
+        # print("------")
         
-        print(params)
+        # print(params)
         orderResponse= self._deleteRequest("api.regular.order.cancel", params)
         return orderResponse
     
