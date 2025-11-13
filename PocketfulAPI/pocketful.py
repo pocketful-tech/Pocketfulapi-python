@@ -462,7 +462,7 @@ class Pocketful(object):
     # order book
     def getPendingOrder(self):
         """Get Pending Order."""
-        data = self._getRequest("api.pending.order",{"ClientId":self.clientId})
+        data = self._getRequest("api.pending.order",{"client_id":self.clientId})
         return data
     
     def getCompletedOrder(self):
