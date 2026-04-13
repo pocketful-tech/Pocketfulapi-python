@@ -1,4 +1,4 @@
-from six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 import json 
 import logging
 import requests
@@ -70,7 +70,8 @@ class Pocketful(object):
 
         # contract details
         "api.search.scrip": "/api/v1/search?key={key}",
-        "api.scrip.info": "/api/v1/contract/{exchange}?info=scrip&token={token}",
+        "api.scrip.info": "/api/v1/contract/{exchange}?info=scrip&token={token}",     
+        "api.dprdata": "/api/v1/contract/{exchange}?info=scrip&token={token}",
 
         # option chain
         "api.fetch.option.chain":"/api/v1/optionchain/NFO?token={equity_token}&num={num}&price={price}",
@@ -83,7 +84,7 @@ class Pocketful(object):
         "api.marketdata": "/api/v1/marketdata/{exchange}/Capital?token={token}",
         "api.ltpdata": "/api/v1/marketdata/{exchange}/Capital?token={token}&key=last_trade_price",
         "api.close_price": "/api/v1/marketdata/{exchange}/Capital?token={token}&key=close_price",
-        "api.dprdata": "/api/v1/dprdata/{exchange}/{token}",
+        
 
         # fno data
         "api.fnodata": "/api/v1/marketdata/{exchange}/FutOpt?token={token}",
@@ -557,7 +558,14 @@ class Pocketful(object):
     def getDPRdata(self,exchange,token):
         """Get DPR data."""
         data = self._getRequest("api.dprdata",{"exchange":exchange,"token":token})
-        return data
+        if data:
+            error = data.get("error", {"code": 0, "message": ""})
+            result_data = data.get("result", {})
+            dpr = result_data.get("dpr")
+            higher_circuit_limit = result_data.get("higher_circuit_limit")
+            lower_circuit_limit = result_data.get("lower_circuit_limit")
+            return {"error": error, "result": {"dpr": dpr, "higher_circuit_limit": higher_circuit_limit, "lower_circuit_limit": lower_circuit_limit}}
+        return {"error": {"code": 0, "message": ""}, "result": {"dpr": None, "higher_circuit_limit": None, "lower_circuit_limit": None}}
     
 
     def greekdata(self,exchange,token):
