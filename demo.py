@@ -1,18 +1,18 @@
 from PocketfulAPI.pocketful import Pocketful
 import json
 
-clientId = "YOUR_CLIENT_ID_HERE"            # pocketful account Client Id
-accessToken = "YOUR_ACCESS_TOKEN_HERE"
-print("Initializing Pocketful client...")
+clientId = "CLIENT_ID"
+access_token = "ACCESS_TOKEN"
 try:
-    pocket=Pocketful(clientId, accessToken)
+    pocket=Pocketful(clientId, access_token)
     print("Client initialized successfully")
-    
-    print("Making API call to get F&O LTP data...")
+    response = pocket.getProfile()
+    print(response)
+    # print("Making API call to get F&O LTP data...")
     data= pocket.getFNOdata("BSE","845835")
     print("API call completed")
-    print("Response data:")
-    print(data)
+    # print("Response data:")
+    # print(data)
     
 except Exception as e:
     print(f"Error occurred: {e}")
@@ -20,24 +20,23 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
-# pocket = Pocketful(clientId, access_token)
 
-# response = pocket.getProfile()
-# print(response)
+response = pocket.getProfile()
+print(response)
 # with open("demoresponse.json", "w") as f:
 #     json.dump(response, f, indent=4) 
 
-# data=pocket.getPendingOrder()
-# print(data)
+data=pocket.getPendingOrder()
+print(data)
 
-# data = pocket.getCompletedOrder()
-# print(data)
+data = pocket.getCompletedOrder()
+print(data)
 
-# data = pocket.getTradeBook()
-# print(data)
+data = pocket.getTradeBook()
+print(data)
 
-# data = pocket.getOrderHistory("<oms_order_id>")
-# print(data)
+data = pocket.getOrderHistory("<oms_order_id>")
+print(data)
 
 
 # getDematHoldings = pocket.getDematHoldings()

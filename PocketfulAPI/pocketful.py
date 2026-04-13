@@ -20,7 +20,7 @@ log=logging.getLogger(__name__)
 class Pocketful(object):
 
 
-    _root_url = 'https://trade.pocketful.in'
+    _root_url = 'https://algo.pocketful.in'
     
     _default_timeout = 7
 
@@ -101,7 +101,6 @@ class Pocketful(object):
     except Exception as e:
         print("Exception while retriving IP Address,using local host IP address",e)
     finally:
-        # clientPublicIp="106.193.147.98"
         clientPublicIp=""
         clientLocalIp="127.0.0.1"
         clientMacAddress=':'.join(re.findall('..', '%012x' % uuid.getnode()))
@@ -164,8 +163,8 @@ class Pocketful(object):
             'P-DeviceType': 'WEB',
             'Content-type': 'application/json',
             'accept': 'application/json',
-            'Authorization': "Bearer "+self.access_token
-            # 'x-authorization-token': self.access_token,
+            # 'Authorization': "Bearer "+self.access_token
+            'x-authorization-token': self.access_token,
 
         }
     
@@ -208,7 +207,6 @@ class Pocketful(object):
         headers = self.requestHeaders()
 
         # Print API call details
-        #print(f"\n=== API CALL TO trade.pocketful.in ===")
         #print(f"Method: {method}")
         # print(f"URL: {url}")
         #print(f"Path Parameters: {path_params}")
