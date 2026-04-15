@@ -6,13 +6,6 @@ from requests import get
 import re, uuid, time, datetime
 import socket
 from PocketfulAPI import pocketful_exceptions as ex
-from PocketfulAPI.pocketfulwebsocket import PocketfulSocket
-
-
-
-import sys
-import websocket
-
 
 
 log=logging.getLogger(__name__)
@@ -25,6 +18,9 @@ class Pocketful(object):
     _default_timeout = 7
 
     _routes = {
+        # login
+        "api.login": "api/v3/user/login",
+        "api.validate.2fa": "/api/v3/user/twofa",
         # profile
         "api.profile": "/api/v1/user/profile?client_id={client_id}",
     
@@ -93,21 +89,14 @@ class Pocketful(object):
 
 
 
-    try:
-        clientPublicIp= " " + get('https://api.ipify.org').text
-        if " " in clientPublicIp:
-            clientPublicIp=clientPublicIp.replace(" ","")
-        hostname = socket.gethostname()
-        clientLocalIp=socket.gethostbyname(hostname)
-    except Exception as e:
-        print("Exception while retriving IP Address,using local host IP address",e)
-    finally:
-        clientPublicIp=""
-        clientLocalIp="127.0.0.1"
-        clientMacAddress=':'.join(re.findall('..', '%012x' % uuid.getnode()))
-        accept = "application/json"
-        userType = "USER"
-        sourceID = "WEB"
+    # Client information placeholders
+    clientPublicIp = ""
+    clientLocalIp = "127.0.0.1"
+    clientMacAddress = ""
+    userType = "USER"
+    sourceID = "WEB"
+    privateKey = None
+
 
     def __init__(self, clientId=None, access_token=None, api_key=None, timeout=None, client_secret=None, disable_ssl=False, debug=False, proxies=None, session_expiry_hook=None,  pool=None, *args, **kwargs ):
 
@@ -149,12 +138,15 @@ class Pocketful(object):
         else:
             self.reqsession = requests
 
+        # Initialize client info (IP, Mac, etc.)
+        self._set_client_info()
+
         # disable requests SSL warning
         requests.packages.urllib3.disable_warnings()
         
 
     def requestHeaders(self):
-        return{
+        return {
             "X-ClientLocalIP": self.clientLocalIp,
             "X-ClientPublicIP": self.clientPublicIp,
             "X-MACAddress": self.clientMacAddress,
@@ -162,12 +154,77 @@ class Pocketful(object):
             "X-UserType": self.userType,
             "X-SourceID": self.sourceID,
             'P-DeviceType': 'WEB',
+            'x-device-type': 'web',
             'Content-type': 'application/json',
             'accept': 'application/json',
-            # 'Authorization': "Bearer "+self.access_token
             'x-authorization-token': self.access_token,
-
         }
+
+    def _set_client_info(self):
+        """Fetch client system and IP information."""
+        try:
+            # Fetch Public IP
+            self.clientPublicIp = requests.get('https://api.ipify.org', timeout=5).text.strip()
+            # Fetch Local IP
+            hostname = socket.gethostname()
+            self.clientLocalIp = socket.gethostbyname(hostname)
+        except Exception:
+            # Fallback to defaults
+            self.clientPublicIp = ""
+            self.clientLocalIp = "127.0.0.1"
+        
+        self.clientMacAddress = ':'.join(re.findall('..', '%012x' % uuid.getnode()))
+
+    def generateSession(self, channel_id, channel_secret, pin=None):
+        """
+        Generate a new session (Login).
+        - `channel_id` is your client ID (e.g., XYZ001).
+        - `channel_secret` is your login password or secret.
+        - `pin` (optional): If provided, automatically completes the 2FA step.
+        """
+        params = {
+            "channel_id": channel_id,
+            "channel_secret": channel_secret
+        }
+        res = self._postRequest("api.login", params)
+
+        # If login is successful and a PIN is provided, attempt 2FA validation
+        if pin and res.get("status") == "success":
+            twofa_data = res.get("data", {}).get("twofa", {})
+            twofa_token = twofa_data.get("twofa_token")
+            questions = twofa_data.get("questions", [])
+
+            if twofa_token and questions:
+                question_id = questions[0].get("question_id")
+                print(question_id)
+                # Automatically validate 2FA
+                res = self.validate2FA(channel_id, twofa_token, pin, question_id)
+
+                # If 2FA is successful, store the access token
+                if res.get("status") == "success":
+                    auth_token = res.get("data", {}).get("auth_token")
+                    if auth_token:
+                        self.access_token = auth_token
+                        self.clientId = channel_id
+        return res
+
+    def validate2FA(self, login_id, twofa_token, pin, question_id):
+        """
+        Validate the 2FA (PIN) step.
+        """
+        if question_id == "100":
+            type="TOTP"
+        else:
+            type="PIN"
+        params = {
+            "login_id": login_id,
+            "twofa": [{"question_id": question_id, "answer": pin}],
+            "twofa_token": twofa_token,
+            "type": type,
+            "device_type": "web"
+        }
+        return self._postRequest("api.validate.2fa", params)
+
     
 
 
@@ -206,14 +263,6 @@ class Pocketful(object):
         url = urljoin(self.root, uri)
         # Custom headers
         headers = self.requestHeaders()
-
-        # Print API call details
-        #print(f"Method: {method}")
-        # print(f"URL: {url}")
-        #print(f"Path Parameters: {path_params}")
-        #print(f"Query Parameters: {query_params}")
-        #print(f"Headers: {headers}")
-        # print(f"=====================================\n")
 
 
 

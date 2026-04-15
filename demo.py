@@ -1,18 +1,46 @@
 from PocketfulAPI.pocketful import Pocketful
 import json
+import pyotp
 
-clientId = "CLIENT_ID"
-access_token = "ACCESS_TOKEN"
+
+# Credentials
+client_id = "XYZ001"
+password = "[PASSWORD]" # Replace with your actual password
+pin = "123456"            # Replace with your actual 2FA PIN
+secrare="[ENCRYPTION_KEY]"  # Replace with your actual secret key
+totp=pyotp.TOTP(secrare).now()
+
+pocket = Pocketful()
+print("--- Starting Login Flow ---")
 try:
-    pocket=Pocketful(clientId, access_token)
-    print("Client initialized successfully")
-    response = pocket.getProfile()
-    print(response)
-    # print("Making API call to get F&O LTP data...")
+    # Perform Login + 2FA in a single call
+    login_response = pocket.generateSession(client_id, password, pin)
+    
+    print("\nLogin Response:")
+    print(json.dumps(login_response, indent=4))
+
+    if login_response.get("status") == "success":
+        print("\n[✓] Login Successful!")
+        print(f"[✓] Access Token automatically updated: {pocket.access_token[:20]}...")
+        
+        # Test an authenticated endpoint
+        print("\n--- Fetching Profile ---")
+        profile = pocket.getProfile()
+        print("Profile Data:")
+        print(json.dumps(profile, indent=4))
+        getDematHoldings = pocket.getDematHoldings()
+        print(getDematHoldings)
+    else:
+        print("\n[✗] Login Failed!")
+        print(f"Message: {login_response.get('message')}")
+
+except Exception as e:
+    print(f"\n[!] An error occurred: {e}")
+
+try:
     data= pocket.getFNOdata("BSE","845835")
     print("API call completed")
-    # print("Response data:")
-    # print(data)
+    print(data)
     
 except Exception as e:
     print(f"Error occurred: {e}")
@@ -23,8 +51,7 @@ except Exception as e:
 
 response = pocket.getProfile()
 print(response)
-# with open("demoresponse.json", "w") as f:
-#     json.dump(response, f, indent=4) 
+
 
 data=pocket.getPendingOrder()
 print(data)
