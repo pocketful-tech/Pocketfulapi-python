@@ -3,68 +3,66 @@ import json
 import pyotp
 
 
-# Credentials
-client_id = "XYZ001"
-password = "[PASSWORD]" # Replace with your actual password
-pin = "123456"            # Replace with your actual 2FA PIN
-secrare="[ENCRYPTION_KEY]"  # Replace with your actual secret key
-totp=pyotp.TOTP(secrare).now()
+CLIENT_ID = "client_id"
+ACCESS_TOKEN = "access_token"
 
 pocket = Pocketful()
-print("--- Starting Login Flow ---")
-try:
-    # Perform Login + 2FA in a single call
-    login_response = pocket.generateSession(client_id, password, pin)
-    
-    print("\nLogin Response:")
-    print(json.dumps(login_response, indent=4))
 
-    if login_response.get("status") == "success":
-        print("\n[✓] Login Successful!")
-        print(f"[✓] Access Token automatically updated: {pocket.access_token[:20]}...")
-        
-        # Test an authenticated endpoint
-        print("\n--- Fetching Profile ---")
-        profile = pocket.getProfile()
-        print("Profile Data:")
-        print(json.dumps(profile, indent=4))
-        getDematHoldings = pocket.getDematHoldings()
-        print(getDematHoldings)
+pocket.clientId = CLIENT_ID
+pocket.access_token = ACCESS_TOKEN
+
+print("Testing authentication...\n")
+
+profile = pocket.getProfile()
+print(json.dumps(profile, indent=4))
+
+
+# Correct authentication check
+if profile.get("status") is True:
+    print("\nAuthentication successful")
+else:
+    print("\nAuthentication failed")
+    exit()
+
+
+# Holdings
+holdings = pocket.getDematHoldings()
+print("\nHoldings:")
+print(json.dumps(holdings, indent=4))
+
+
+# Pending orders
+pending = pocket.getPendingOrder()
+print("\nPending Orders:")
+print(json.dumps(pending, indent=4))
+
+
+# Completed orders
+completed = pocket.getCompletedOrder()
+print("\nCompleted Orders:")
+print(json.dumps(completed, indent=4))
+
+
+# Tradebook
+tradebook = pocket.getTradeBook()
+print("\nTradebook:")
+print(json.dumps(tradebook, indent=4))
+
+
+# Fetch order history only if completed orders exist
+try:
+    if completed.get("data"):
+        order_id = completed["data"][0]["oms_order_id"]
+
+        history = pocket.getOrderHistory(order_id)
+
+        print("\nOrder History:")
+        print(json.dumps(history, indent=4))
     else:
-        print("\n[✗] Login Failed!")
-        print(f"Message: {login_response.get('message')}")
+        print("\nNo completed orders found")
 
 except Exception as e:
-    print(f"\n[!] An error occurred: {e}")
-
-try:
-    data= pocket.getFNOdata("BSE","845835")
-    print("API call completed")
-    print(data)
-    
-except Exception as e:
-    print(f"Error occurred: {e}")
-    print(f"Error type: {type(e)}")
-    import traceback
-    traceback.print_exc()
-
-
-response = pocket.getProfile()
-print(response)
-
-
-data=pocket.getPendingOrder()
-print(data)
-
-data = pocket.getCompletedOrder()
-print(data)
-
-data = pocket.getTradeBook()
-print(data)
-
-data = pocket.getOrderHistory("<oms_order_id>")
-print(data)
-
+    print("Order history error:", e)
 
 # getDematHoldings = pocket.getDematHoldings()
 # print(getDematHoldings)
@@ -121,17 +119,17 @@ print(data)
 # deleteBasket=pocket.deleteBasket({"BasketId":"6bc753e5-b7d1-4ebb-94ac-36c751cedfbd","BasketName":"yash"})
 # print(deleteBasket)
 
-## !! Place Buy order
+# # !! Place Buy order
 # placeOrder=pocket.placeOrder({
 #     "exchange": "NSE",
-#     "instrument_token": "13342",
-#     "client_id": clientId,
-#     "order_type": "MARKET",
+#     "instrument_token": "14366",
+#     "client_id": "R1124",
+#     "order_type": "LIMIT",
 #     "amo": True,
-#     "price": 0,"quantity": 1,
+#     "price": 13,"quantity": 1,
 #     "disclosed_quantity": 0,
 #     "validity": "DAY",
-#     "product": "CNC",
+#     "product": "MIS",
 #     "order_side": "BUY",
 #     "device": "WEB",
 #     "user_order_id": 10002,

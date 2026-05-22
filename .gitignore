@@ -1,4 +1,17 @@
-env
+# Environment variables / secrets
+.env
 credentials.json
+
+# Output files
 demoresponse.json
-test
+
+# Test files
+test/
+
+# Python cache
+__pycache__/
+PocketfulAPI/__pycache__/
+*.pyc
+
+# VS Code
+.vscode/
