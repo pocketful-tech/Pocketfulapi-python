@@ -1,6 +1,5 @@
 from PocketfulAPI.pocketful import Pocketful
 import json
-import pyotp
 
 
 CLIENT_ID = "client_id"
@@ -25,44 +24,44 @@ else:
     exit()
 
 
-# Holdings
-holdings = pocket.getDematHoldings()
-print("\nHoldings:")
-print(json.dumps(holdings, indent=4))
+# # Holdings
+# holdings = pocket.getDematHoldings()
+# print("\nHoldings:")
+# print(json.dumps(holdings, indent=4))
 
 
-# Pending orders
-pending = pocket.getPendingOrder()
-print("\nPending Orders:")
-print(json.dumps(pending, indent=4))
+# # Pending orders
+# pending = pocket.getPendingOrder()
+# print("\nPending Orders:")
+# print(json.dumps(pending, indent=4))
 
 
-# Completed orders
-completed = pocket.getCompletedOrder()
-print("\nCompleted Orders:")
-print(json.dumps(completed, indent=4))
+# # Completed orders
+# completed = pocket.getCompletedOrder()
+# print("\nCompleted Orders:")
+# print(json.dumps(completed, indent=4))
 
 
-# Tradebook
-tradebook = pocket.getTradeBook()
-print("\nTradebook:")
-print(json.dumps(tradebook, indent=4))
+# # Tradebook
+# tradebook = pocket.getTradeBook()
+# print("\nTradebook:")
+# print(json.dumps(tradebook, indent=4))
 
 
-# Fetch order history only if completed orders exist
-try:
-    if completed.get("data"):
-        order_id = completed["data"][0]["oms_order_id"]
+# # Fetch order history only if completed orders exist
+# try:
+#     if completed.get("data"):
+#         order_id = completed["data"][0]["oms_order_id"]
 
-        history = pocket.getOrderHistory(order_id)
+#         history = pocket.getOrderHistory(order_id)
 
-        print("\nOrder History:")
-        print(json.dumps(history, indent=4))
-    else:
-        print("\nNo completed orders found")
+#         print("\nOrder History:")
+#         print(json.dumps(history, indent=4))
+#     else:
+#         print("\nNo completed orders found")
 
-except Exception as e:
-    print("Order history error:", e)
+# except Exception as e:
+#     print("Order history error:", e)
 
 # getDematHoldings = pocket.getDematHoldings()
 # print(getDematHoldings)
