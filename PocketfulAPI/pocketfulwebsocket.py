@@ -7,7 +7,7 @@ import time
 
 
 class PocketfulSocket(object):
-    base_url = "https://trade.pocketful.in"
+    base_url = "https://algo.pocketful.in"
     
     def __init__(self, client_id,access_token):
         self.headers = {'Content-type': 'application/json'}
