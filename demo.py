@@ -77,7 +77,7 @@ except Exception as e:
 
 
 
-# createBasket = pocket.createBasket({"login_id":clientId,"name":"pocketful002","type":"NORMAL","product_type":"ALL","order_type":"ALL"})
+# createBasket = pocket.createBasket({"login_id":clientId,"name":"pocketful002","type":"NORMAL","product_type":"ALL","order_type":"LIMIT"})
 # print(createBasket)
 
 # response = pocket.addInstrumentToBasket({
@@ -90,7 +90,7 @@ except Exception as e:
 #             "execution_type": "REGULAR",
 #             "instrument_token": 14366,
 #             "order_side": "BUY",
-#             "order_type": "MARKET",
+#             "order_type": "LIMIT",
 #             "price": 0,
 #             "product": "MIS",
 #             "quantity": 1,
@@ -148,7 +148,7 @@ except Exception as e:
 #     "exchange": "NSE",
 #     "instrument_token": "10666",
 #     "client_id": "clintId",
-#     "order_type": "MARKET",
+#     "order_type": "LIMIT",
 #     "amo": False,
 #     "price": 34.8,
 #     "quantity": 1,
